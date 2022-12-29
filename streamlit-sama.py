@@ -11,9 +11,11 @@ del df["Unnamed: 0"]
 
 st.title("Trend 2022")
 # Create the first dropdown to select between 'parliament' and 'dun'
-level = st.selectbox('Select Level:', df['parliamentordun'].unique().tolist())
+level = st.selectbox('Select Level:', ['parliament', 'dun'])
+# Create the second dropdown to select a specific parliament or dun
+code = st.selectbox('Select Area:', df[level + 'Name'].unique().tolist())
 # Filter the data frame based on the selected DM and display the resulting data frame using st.dataframe()
-dfori = df[df['parliamentordun'] == level]
+dfori = df[df[level + 'Name'] == code]
 st.dataframe(dfori)
 
 # Create a regular expression pattern to match the desired column names
