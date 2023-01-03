@@ -3,6 +3,8 @@ import pandas as pd
 import re
 import plotly.express as px
 import plotly.graph_objs as go
+import os
+import textwrap
 
 
 # Read the CSV file
@@ -10,50 +12,55 @@ df = pd.read_csv('/Users/fatinamanimohdali/Downloads/rims.csv')
 del df["Unnamed: 0"]
 
 st.title("Trend 2022")
-# Create the first dropdown to select between 'parliament' and 'dun'
-level = st.selectbox('Select Level:', ['parliament', 'dun'])
-# Create the second dropdown to select a specific parliament or dun
-code = st.selectbox('Select Area:', df[level + 'Name'].unique().tolist())
-# Filter the data frame based on the selected DM and display the resulting data frame using st.dataframe()
-dfori = df[df[level + 'Name'] == code]
+level = st.selectbox('Select Level:', df['parliamentordun'].unique().tolist())
+dfori = df[df['parliamentordun'] == level]
 st.dataframe(dfori)
 
-# Create a regular expression pattern to match the desired column names
 pattern = r'[A-Z]+_voteCount'
-# Use the `filter` function and the `re.match` function to filter the column names
 column_names = filter(lambda x: re.match(pattern, x), dfori.columns)
 column_names_filtered = [column_name for column_name in filter(lambda x: re.match(pattern, x), dfori.columns) if dfori[column_name].notnull().any()]
-
 df_totals = dfori.groupby('date')[list(column_names_filtered)].sum()
 df_totals = df_totals.reset_index()
 df_totals = df_totals.rename({'date': 'Date'}, axis=1)
 
-# Create a list of dictionaries representing the data for each trace in the chart
 traces = []
 for column_name in column_names_filtered:
+    hovertext = '<br>' + "Details" + '<br>' + "Date: " + dfori['date'] + '<br>' + "DM: " + dfori['DM'] + '<br>' + column_name + ': ' + dfori[column_name].astype(str)
+    dfori[column_name] = pd.to_numeric(dfori[column_name], downcast='integer')
     trace = {
         'x': df_totals['Date'],
         'y': df_totals[column_name],
         'name': column_name,
         'type': 'scatter',
         'mode': 'lines+markers',
-        'hovertext': '<br>' + "Details" + '<br>' + "Date: " + df_totals['Date'] + '<br>' + column_name + ': ' + df_totals[column_name].astype(str),
+        'hovertext': hovertext,
         'hoverlabel': {
             'namelength': -1,
             'font': {
                 'size': 20
             }
-        }
+        },
+        'hovertemplate': '%{hovertext}<extra></extra>'
     }
     traces.append(trace)
 
-# Use the `go.Figure` function from `plotly` to create the chart figure
 figure = go.Figure(data=traces, layout={
     'title': {'text': 'Vote Count by Date'},
     'xaxis': {'title': 'Date'},
     'yaxis': {'title': 'Vote Count'}
 })
 
-# Use the `st.plotly_chart` function to display the chart in Streamlit
-chart = st.plotly_chart(figure)
+st.plotly_chart(figure)
 
+# Create a list of dictionaries representing the data for each trace in the chart
+traces = []
+merged_dfs = []
+folder = '/Users/fatinamanimohdali/Documents/RIMS/14Dec2022_new/justifi/'
+for filename in dfori['filename']:
+    if filename in [os.path.basename(file) for file in os.listdir(folder)]:
+        df1 = pd.read_csv(folder + filename)
+        merged_dfs.append(df1)
+    merged_df = pd.concat(merged_dfs, ignore_index=True)
+    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+    merged_df['justification'] = merged_df['justification']
+st.table(merged_df)

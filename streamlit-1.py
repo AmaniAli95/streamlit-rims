@@ -3,7 +3,6 @@ import pandas as pd
 import re
 import plotly.express as px
 import plotly.graph_objs as go
-import plotly.graph_objects as go
 import os
 import textwrap
 
@@ -32,6 +31,92 @@ pattern = r'[A-Z]+_voteCount'
 # Use the `filter` function and the `re.match` function to filter the column names
 column_names = filter(lambda x: re.match(pattern, x), dfori.columns)
 column_names_filtered = [column_name for column_name in filter(lambda x: re.match(pattern, x), dfori.columns) if dfori[column_name].notnull().any()]
+
+##########
+
+traces = []
+for column_name in column_names_filtered:
+    hovertext = '<br>' + "Details" + '<br>' + "Date: " + dfori['date'] + '<br>' + "DM: " + dfori['DM'] + '<br>' + column_name + ': ' + dfori[column_name].astype(str)
+    dfori[column_name] = pd.to_numeric(dfori[column_name], downcast='integer')
+    trace = {
+        'x': dfori['date'],
+        'y': dfori[column_name],
+        'name': column_name,
+        'type': 'scatter',
+        'mode': 'lines+markers',
+        'hovertext': hovertext,
+        'hoverlabel': {
+            'namelength': -1,
+            'font': {
+                'size': 20
+            }
+        },
+        'hovertemplate': '%{hovertext}<extra></extra>'
+    }
+    traces.append(trace)
+figure = go.Figure(data=traces, layout={
+    'title': {'text': 'Vote Count by Date'},
+    'xaxis': {'title': 'Date'},
+    'yaxis': {'title': 'Vote Count'}
+})
+st.plotly_chart(figure)
+
+###########
+
+def wrap_justification(text):
+   return '<br>'.join(textwrap.wrap(text, width=60))
+
+# Create a list of dictionaries representing the data for each trace in the chart
+traces = []
+merged_dfs = []
+folder = '/Users/fatinamanimohdali/Documents/RIMS/14Dec2022_new/justifi/'
+for filename in dfori['filename']:
+    if filename in [os.path.basename(file) for file in os.listdir(folder)]:
+        df1 = pd.read_csv(folder + filename)
+        merged_dfs.append(df1)
+    merged_df = pd.concat(merged_dfs, ignore_index=True)
+    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+    #merged_df['justification'] = merged_df['justification'].apply(wrap_justification)
+    merged_df['justification'] = merged_df['justification']
+st.table(merged_df)
+
+    
+##########
+
+traces = []
+for column_name in column_names_filtered:
+    folder = '/Users/fatinamanimohdali/Documents/RIMS/14Dec2022_new/justifi/'
+    hovertext = '<br>' + "Details" + '<br>' + "Date: " + dfori['date'] + '<br>' + "DM: " + dfori['DM'] + '<br>' + column_name + ': ' + dfori[column_name].astype(str)
+    for filename in dfori['filename']:
+        if filename in [os.path.basename(file) for file in os.listdir(folder)]:
+            df1 = pd.read_csv(folder + filename)
+            justification = str(df1['justification'][0])
+            justification = '<br>'.join(justification[i:i+60] for i in range(0, len(justification),60))
+            #hovertext = '<br>' + "Details" + '<br>' + "Date: " + dfori['date'] + '<br>' + "DM: " + dfori['DM'] + '<br>' + column_name + ': ' + dfori[column_name].astype(str) + '<br>' + "Justification: " + justification
+            hovertext += '<br>' + "Justification: " + justification
+    dfori[column_name] = pd.to_numeric(dfori[column_name], downcast='integer')
+    trace = {
+        'x': dfori['date'],
+        'y': dfori[column_name],
+        'name': column_name,
+        'type': 'scatter',
+        'mode': 'lines+markers',
+        'hovertext': hovertext,
+        'hoverlabel': {
+            'namelength': -1,
+            'font': {
+                'size': 2
+            }
+        },
+        'hovertemplate': '%{hovertext}<extra></extra>'
+        }
+    traces.append(trace)
+figure = go.Figure(data=traces, layout={
+    'title': {'text': 'Vote Count by Date'},
+    'xaxis': {'title': 'Date'},
+    'yaxis': {'title': 'Vote Count'}
+})
+st.plotly_chart(figure)
 
 ##########
 
