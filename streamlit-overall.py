@@ -3,10 +3,17 @@ import pandas as pd
 import re
 import plotly.express as px
 import plotly.graph_objs as go
-import os
 import textwrap
+import requests
 
-df = pd.read_csv('/Users/fatinamanimohdali/Downloads/rims.csv')
+# Replace link_to_file with the link to the file on the cloud storage service
+link_to_file = 'https://drive.google.com/file/d/1GRvX-muzQXwC5njqugA5iQPHbUI34VYn/view?usp=share_link'
+
+# Use the requests library to download the file from the cloud storage service
+response = requests.get(link_to_file)
+
+#df = pd.read_csv('/Users/fatinamanimohdali/Downloads/rims.csv')
+df = pd.read_csv(response.content)
 del df["Unnamed: 0"]
 
 st.title("Trend 2022")
