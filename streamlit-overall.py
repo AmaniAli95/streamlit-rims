@@ -67,7 +67,7 @@ for subfolder in subfolders:
     # Construct the URL for the subfolder
     subfolder_url = f"{url}/{subfolder}"
     # Make a request to the GitHub API to get the list of files in the subfolder    
-    response = requests.get(url)
+    response = requests.get(subfolder_url)
     files = response.json()
     merged_dfs = []
 
