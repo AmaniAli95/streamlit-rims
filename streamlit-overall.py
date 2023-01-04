@@ -71,10 +71,11 @@ for filename in df_totals['filename']:
     st.write(filename)
     for subfolder in subfolders:
         subfolder_url = f"{url}/{subfolder}" 
+        st.write(subfolder_url)
         response = requests.get(subfolder_url)
         subfolder_files = response.json()
+        st.write(filesq)
         file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
-        st.write(file)
         if file_obj is not None:
             url1 = file_obj['html_url']
             raw_url = url1.replace("/blob/", "/raw/")
