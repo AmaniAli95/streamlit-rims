@@ -59,68 +59,61 @@ st.plotly_chart(figure)
 def wrap_justification(text):
    return '<br>'.join(textwrap.wrap(text, width=60))
 
-urls = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification/folder1"
-responsea = requests.get(urls)
-filesd = responsea.json()
-st.write(filesd)
-
-# Define the list of subfolder names
-subfolders = ['folder1', 'folder2', 'folder3', 'folder4', 'folder5']
-
-# Make a request to the GitHub API to get the list of files in the 'justifi' folder
-url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification"
+url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justifi"
 response = requests.get(url)
 files = response.json()
 merged_dfs = []
 
 for filename in df_totals['filename']:
-    st.write(filename)
-    st.write("1")
-    for subfolder in subfolders:
-        st.write("2")
-        subfolder_url = f"{url}/{subfolder}" 
-        st.write(subfolder_url)
-        response = requests.get(subfolder_url)
-        subfolder_files = response.json()
-        st.write(subfolder_files)
-        file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
-        if file_obj is not None:
-            st.write("3")
-            url1 = file_obj['html_url']
-            raw_url = url1.replace("/blob/", "/raw/")
-            df1 = pd.read_csv(raw_url)
-            merged_dfs.append(df1)
-        else:
-            st.write("4")
-            print(f"File '{filename}' not found in subfolder '{subfolder}'")
-            continue
-    st.write("5")
+    # Find the file object with a matching name in the files list
+    file_obj = next((file for file in files if file['name'] == filename), None)
+    # If a matching file was found, read it and append it to the merged_dfs list
+    if file_obj is not None:
+        url1 = file_obj['html_url']
+        raw_url = url1.replace("/blob/", "/raw/")
+        df1 = pd.read_csv(raw_url)
+        merged_dfs.append(df1)
 # Concatenate all the dataframes and display the table
     merged_df = pd.concat(merged_dfs, ignore_index=True)
     merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
 
+# Define the list of subfolder names
+#subfolders = ['folder1', 'folder2', 'folder3', 'folder4', 'folder5']
 
-
-
-#url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justifi"
+# Make a request to the GitHub API to get the list of files in the 'justifi' folder
+#url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification"
 #response = requests.get(url)
 #files = response.json()
 #merged_dfs = []
 
 #for filename in df_totals['filename']:
-#    # Find the file object with a matching name in the files list
-#    file_obj = next((file for file in files if file['name'] == filename), None)
-#    # If a matching file was found, read it and append it to the merged_dfs list
-#    if file_obj is not None:
-#        url1 = file_obj['html_url']
-#        raw_url = url1.replace("/blob/", "/raw/")
-#        df1 = pd.read_csv(raw_url)
-#        merged_dfs.append(df1)
+#    st.write(filename)
+#    st.write("1")
+#    for subfolder in subfolders:
+#        st.write("2")
+#        subfolder_url = f"{url}/{subfolder}" 
+#        st.write(subfolder_url)
+#        response = requests.get(subfolder_url)
+#        subfolder_files = response.json()
+#        st.write(subfolder_files)
+#        file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
+#        if file_obj is not None:
+#            st.write("3")
+#            url1 = file_obj['html_url']
+#            raw_url = url1.replace("/blob/", "/raw/")
+#            df1 = pd.read_csv(raw_url)
+#            merged_dfs.append(df1)
+#        else:
+#            st.write("4")
+#            print(f"File '{filename}' not found in subfolder '{subfolder}'")
+#            continue
+#    st.write("5")
 # Concatenate all the dataframes and display the table
 #    merged_df = pd.concat(merged_dfs, ignore_index=True)
 #    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 #st.table(merged_df)
+
 
 
 
