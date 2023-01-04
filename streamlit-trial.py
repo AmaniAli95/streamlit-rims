@@ -37,7 +37,7 @@ for column_name in column_names_filtered:
         'name': column_name,
         'type': 'scatter',
         'mode': 'lines+markers',
-        'hovertext': '<b>' + "Details" + '<b><br>' + "Date: " + df_totals['Date'] + '<br>' + column_name + ': ' + df_totals[column_name].astype(str)+ '<br>' + "Total Vote Count: " + df_totals[column_name].sum().astype(str),
+        'hovertext': '<b>' + "Details" + '<b><br>' + "Date: " + df_totals['Date'] + '<br>' + column_name + ': ' + df_totals[column_name].astype(str),
         'hoverlabel': {
             'namelength': -1,
             'font': {
