@@ -59,13 +59,17 @@ st.plotly_chart(figure)
 def wrap_justification(text):
    return '<br>'.join(textwrap.wrap(text, width=60))
 
+# Define the list of subfolder names
+subfolders = ['folder1', 'folder2', 'folder3', 'folder4', 'folder5']
+
+# Make a request to the GitHub API to get the list of files in the 'justifi' folder
 url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification"
-# Set the list of subfolders to loop through
-subfolders = ["folder1", "folder2", "folder3", "folder4", "folder5"]
-# Loop through each subfolder
+response = requests.get(url)
+files = response.json()
 merged_dfs = []
 
 for filename in df_totals['filename']:
+    # Loop through the subfolders
     for subfolder in subfolders:
         # Construct the URL for the subfolder
         subfolder_url = f"{url}/{subfolder}"
@@ -80,9 +84,10 @@ for filename in df_totals['filename']:
             raw_url = url1.replace("/blob/", "/raw/")
             df1 = pd.read_csv(raw_url)
             merged_dfs.append(df1)
+
 # Concatenate all the dataframes and display the table
-    merged_df = pd.concat(merged_dfs, ignore_index=True)
-    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+merged_df = pd.concat(merged_dfs, ignore_index=True)
+merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
 
 
