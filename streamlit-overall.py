@@ -84,6 +84,10 @@ for filename in df_totals['filename']:
             raw_url = url1.replace("/blob/", "/raw/")
             df1 = pd.read_csv(raw_url)
             merged_dfs.append(df1)
+        else:
+            # If the file was not found, print a message and continue with the next iteration of the loop
+            print(f"File '{filename}' not found in subfolder '{subfolder}'")
+            continue
 
 # Concatenate all the dataframes and display the table
 merged_df = pd.concat(merged_dfs, ignore_index=True)
