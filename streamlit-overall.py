@@ -69,26 +69,24 @@ files = response.json()
 merged_dfs = []
 
 for filename in df_totals['filename']:
-    # Loop through the subfolders
+    st.write("1")
     for subfolder in subfolders:
-        # Construct the URL for the subfolder
-        subfolder_url = f"{url}/{subfolder}"
-        # Make a request to the GitHub API to get the list of files in the subfolder    
+        st.write("2")
+        subfolder_url = f"{url}/{subfolder}" 
         response = requests.get(subfolder_url)
         subfolder_files = response.json()
-        # Find the file object with a matching name in the files list
         file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
-        # If a matching file was found, read it and append it to the merged_dfs list
         if file_obj is not None:
+            st.write("3")
             url1 = file_obj['html_url']
             raw_url = url1.replace("/blob/", "/raw/")
             df1 = pd.read_csv(raw_url)
             merged_dfs.append(df1)
         else:
-            # If the file was not found, print a message and continue with the next iteration of the loop
+            st.write("4")
             print(f"File '{filename}' not found in subfolder '{subfolder}'")
             continue
-
+st.write("5")
 # Concatenate all the dataframes and display the table
 merged_df = pd.concat(merged_dfs, ignore_index=True)
 merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
