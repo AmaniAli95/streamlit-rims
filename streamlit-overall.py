@@ -77,6 +77,7 @@ for filename in df_totals['filename']:
         st.write(subfolder_url)
         # Make a request to the GitHub API to get the list of files in the subfolder    
         response = requests.get(subfolder_url)
+        st.write(response)
         files = response.json()
         st.write(files)
         # Find the file object with a matching name in the files list
