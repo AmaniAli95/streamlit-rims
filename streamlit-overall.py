@@ -79,9 +79,10 @@ for subfolder in subfolders:
         else:
             print(f"File '{filename}' not found in subfolder '{subfolder}'")
             continue
-    merged_df = pd.concat(merged_dfs, ignore_index=True)
-    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+        merged_df = pd.concat(merged_dfs, ignore_index=True)
+        merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
+
 
 
 
