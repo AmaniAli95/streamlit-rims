@@ -74,7 +74,7 @@ for filename in df_totals['filename']:
         st.write(subfolder_url)
         response = requests.get(subfolder_url)
         subfolder_files = response.json()
-        st.write(filesq)
+        st.write(subfolder_files)
         file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
         if file_obj is not None:
             url1 = file_obj['html_url']
