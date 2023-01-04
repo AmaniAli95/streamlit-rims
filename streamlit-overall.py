@@ -86,30 +86,24 @@ st.table(merged_df)
 
 
 
-url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justifi"
-response = requests.get(url)
-files = response.json()
-merged_dfs = []
+#url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justifi"
+#response = requests.get(url)
+#files = response.json()
+#merged_dfs = []
 
-for filename in df_totals['filename']:
-    # Find the file object with a matching name in the files list
-    file_obj = next((file for file in files if file['name'] == filename), None)
-    # If a matching file was found, read it and append it to the merged_dfs list
-    if file_obj is not None:
-        url1 = file_obj['html_url']
-        raw_url = url1.replace("/blob/", "/raw/")
-        df1 = pd.read_csv(raw_url)
-        merged_dfs.append(df1)
+#for filename in df_totals['filename']:
+#    # Find the file object with a matching name in the files list
+#    file_obj = next((file for file in files if file['name'] == filename), None)
+#    # If a matching file was found, read it and append it to the merged_dfs list
+#    if file_obj is not None:
+#        url1 = file_obj['html_url']
+#        raw_url = url1.replace("/blob/", "/raw/")
+#        df1 = pd.read_csv(raw_url)
+#        merged_dfs.append(df1)
 # Concatenate all the dataframes and display the table
-    merged_df = pd.concat(merged_dfs, ignore_index=True)
-    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
-st.table(merged_df)
-
-
-
-
-
-
+#    merged_df = pd.concat(merged_dfs, ignore_index=True)
+#    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+#st.table(merged_df)
 
 #folder = '/workspaces/streamlit-rims/justifi'
 #for filename in df_totals['filename']:
