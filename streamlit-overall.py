@@ -86,27 +86,19 @@ response = requests.get(url)
 files = response.json()
 merged_dfs = []
 for subfolder in subfolders:
-    st.write("2")
     subfolder_url = f"{url}/{subfolder}" 
-    st.write(subfolder_url)
     response = requests.get(subfolder_url)
     subfolder_files = response.json()
-    st.write(subfolder_files)
     for filename in df_totals['filename']:
-        st.write(filename)
-        st.write("1")
         file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
         if file_obj is not None:
-            st.write("3")
             url1 = file_obj['html_url']
             raw_url = url1.replace("/blob/", "/raw/")
             df1 = pd.read_csv(raw_url)
             merged_dfs.append(df1)
         else:
-            st.write("4")
             print(f"File '{filename}' not found in subfolder '{subfolder}'")
             continue
-    st.write("5")
     merged_df = pd.concat(merged_dfs, ignore_index=True)
     merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
