@@ -61,7 +61,7 @@ def wrap_justification(text):
 
 url1 = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification/folder1"
 responseq = requests.get(url1)
-filesq) = responseq.json()
+filesq = responseq.json()
 st.write(filesq)
 
 subfolders = ['folder1', 'folder2', 'folder3', 'folder4', 'folder5']
