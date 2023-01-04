@@ -59,6 +59,11 @@ st.plotly_chart(figure)
 def wrap_justification(text):
    return '<br>'.join(textwrap.wrap(text, width=60))
 
+urls = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification/folder1"
+responsea = requests.get(urls)
+filesd = responsea.json()
+st.write(filesd)
+
 # Define the list of subfolder names
 subfolders = ['folder1', 'folder2', 'folder3', 'folder4', 'folder5']
 
