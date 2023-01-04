@@ -59,6 +59,11 @@ st.plotly_chart(figure)
 def wrap_justification(text):
    return '<br>'.join(textwrap.wrap(text, width=60))
 
+url1 = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification/folder1"
+responseq = requests.get(url1)
+filesq) = responseq.json()
+st.write(filesq)
+
 subfolders = ['folder1', 'folder2', 'folder3', 'folder4', 'folder5']
 url = "https://api.github.com/repos/AmaniAli95/streamlit-rims/contents/justification"
 merged_dfs = []
