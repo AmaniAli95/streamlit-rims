@@ -71,18 +71,13 @@ for filename in df_totals['filename']:
     st.write(filename)
     # Loop through the subfolders
     for subfolder in subfolders:
-        st.write(subfolder)
         # Construct the URL for the subfolder
         subfolder_url = f"{url}/{subfolder}"
-        st.write(subfolder_url)
         # Make a request to the GitHub API to get the list of files in the subfolder    
         response = requests.get(subfolder_url)
-        st.write(response)
         subfolder_files = response.json()
-        st.write(subfolder_files)
         # Find the file object with a matching name in the files list
         file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
-        st.write(file_obj)
         # If a matching file was found, read it and append it to the merged_dfs list
         if file_obj is not None:
             url1 = file_obj['html_url']
@@ -90,9 +85,9 @@ for filename in df_totals['filename']:
             df1 = pd.read_csv(raw_url)
             merged_dfs.append(df1)
 
-# Concatenate all the dataframes and display the table
-    merged_df = pd.concat(merged_dfs, ignore_index=True)
-    merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+        # Concatenate all the dataframes and display the table
+        merged_df = pd.concat(merged_dfs, ignore_index=True)
+        merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
 
 
