@@ -81,8 +81,8 @@ for filename in df_totals['filename']:
             raw_url = url1.replace("/blob/", "/raw/")
             df1 = pd.read_csv(raw_url)
             merged_dfs.append(df1)
-        merged_df = pd.concat(merged_dfs, ignore_index=True)
-        merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+            merged_df = pd.concat(merged_dfs, ignore_index=True)
+            merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
 
 
