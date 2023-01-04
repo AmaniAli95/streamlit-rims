@@ -75,15 +75,26 @@ for filename in df_totals['filename']:
         response = requests.get(subfolder_url)
         subfolder_files = response.json()
         st.write(subfolder_files)
-        file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
-        if file_obj is not None:
-            url1 = file_obj['html_url']
-            raw_url = url1.replace("/blob/", "/raw/")
-            df1 = pd.read_csv(raw_url)
-            merged_dfs.append(df1)
+        for file in subfolder_files:
+            if file['name'] == filename:
+                file_obj = file
+                url1 = file_obj['html_url']
+                raw_url = url1.replace("/blob/", "/raw/")
+                df1 = pd.read_csv(raw_url)
+                merged_dfs.append(df1)
             merged_df = pd.concat(merged_dfs, ignore_index=True)
             merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
 st.table(merged_df)
+        
+        #file_obj = next((file for file in subfolder_files if file['name'] == filename), None)
+        #if file_obj is not None:
+         #   url1 = file_obj['html_url']
+          #  raw_url = url1.replace("/blob/", "/raw/")
+           # df1 = pd.read_csv(raw_url)
+            #merged_dfs.append(df1)
+            #merged_df = pd.concat(merged_dfs, ignore_index=True)
+            #merged_df = merged_df[['justification','date']].reindex(columns=['date', 'justification'])
+#st.table(merged_df)
 
 
 
